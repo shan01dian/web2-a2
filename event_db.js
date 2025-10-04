@@ -1,22 +1,19 @@
-const mysql = require('mysql2/promise');
+const mysql = require('mysql2'); // 改用 mysql2
 
-// 创建数据库连接池（推荐方式）
 const pool = mysql.createPool({
-    connectionLimit: 10, // 连接池大小
-    host: 'localhost',   // 数据库主机地址
-    user: 'root',       // 数据库用户名
-    password: '0126', // 数据库密码
-    database: 'charityevents_db', // 数据库名称
-    waitForConnections: true,
-    queueLimit: 0
-});
+    connectionLimit: 10,
+    host: 'localhost',
+    port: 3306,
+    user: 'root',
+    password: '0126',
+    database: 'charityevents_db'
+}).promise(); // 关键：添加 .promise() 支持 Promise
 
-// 测试连接池是否可用
 async function testConnection() {
     try {
         const connection = await pool.getConnection();
         console.log('Connected to database with id', connection.threadId);
-        // 释放连接回连接池
+        console.log('测试成功');
         connection.release();
         return true;
     } catch (err) {
@@ -25,8 +22,18 @@ async function testConnection() {
     }
 }
 
-// 导出连接池和测试函数，以便在其他文件中使用
-module.exports = {
-    pool,
-    testConnection
-};
+// 导出和测试代码保持不变
+module.exports = { pool, testConnection };
+
+if (require.main === module) {
+    testConnection()
+        .then(() => {
+            console.log('测试完成');
+            pool.end(); // 关闭连接池
+        })
+        .catch(err => {
+            console.error('测试异常:', err);
+            pool.end();
+            process.exit(1);
+        });
+}
