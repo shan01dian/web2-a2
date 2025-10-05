@@ -1,16 +1,23 @@
 {
   "name": "web2-a2",
   "version": "1.0.0",
-  "description": "",
+  "description": "Charity Events Management System - API Server",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shan01dian/web2-a2.git"
   },
-  "keywords": [],
+  "keywords": [
+    "charity",
+    "events",
+    "api",
+    "mysql"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -22,5 +29,8 @@
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "mysql2": "^3.15.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
