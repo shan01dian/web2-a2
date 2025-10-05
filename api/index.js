@@ -6,6 +6,14 @@ var app =express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// CORS 解决前端跨域
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
 /*// 静态文件服务
 app.use(express.static(path.join(__dirname, '../client')));*/
 

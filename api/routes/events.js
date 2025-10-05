@@ -18,30 +18,19 @@ router.get("/", function(req, res) {
     });
 });
 
-// 获取单个活动详情
-router.get("/:id", function(req, res) {
-    var sql = "SELECT * FROM events WHERE id = " + req.params.id;
-    connection.query(sql, function(err, records, fields) {
-        if (err) {
-            console.error("Error while retrieving event:", err);
-            res.status(500).send({ error: "Error while retrieving event" });
-        } else {
-            if (records.length === 0) {
-                res.status(404).send({ error: "Event not found" });
-            } else {
-                res.send(records[0]);
-            }
-        }
-    });
-});
-
-// 搜索活动（根据日期、位置、类别）
+// 搜索活动（根据日期、位置、类别和名称）
 router.get("/search", function(req, res) {
+    var name = req.query.name;       // 添加活动名称参数
     var date = req.query.date;
     var location = req.query.location;
-    var category = req.query.categories;
+    var category = req.query.category;
 
     var sql = "SELECT e.*, c.name as category_name FROM events e JOIN categories c ON e.category_id = c.id WHERE e.status = 'upcoming'";
+
+    // 添加活动名称模糊搜索
+    if (name) {
+        sql += " AND e.name LIKE '%" + name + "%'";
+    }
 
     if (date) {
         sql += " AND DATE(e.date) = '" + date + "'";
@@ -62,6 +51,23 @@ router.get("/search", function(req, res) {
         }
     });
 });
+// 获取单个活动详情
+router.get("/:id", function(req, res) {
+    var sql = "SELECT * FROM events WHERE id = " + req.params.id;
+    connection.query(sql, function(err, records, fields) {
+        if (err) {
+            console.error("Error while retrieving event:", err);
+            res.status(500).send({ error: "Error while retrieving event" });
+        } else {
+            if (records.length === 0) {
+                res.status(404).send({ error: "Event not found" });
+            } else {
+                res.send(records[0]);
+            }
+        }
+    });
+});
+
 
 
 module.exports = router;
