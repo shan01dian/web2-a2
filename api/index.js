@@ -14,8 +14,6 @@ app.use((req, res, next) => {
     next();
 });
 
-/*// 静态文件服务
-app.use(express.static(path.join(__dirname, '../client')));*/
 
 // API路由
 var eventsAPI = require("./routes/events");
